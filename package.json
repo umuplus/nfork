@@ -1,0 +1,28 @@
+{
+  "version": "0.2.1",
+  "name": "nfork",
+  "description": "extensible clustering module based on node.js' cluster",
+  "author": {
+    "name": "Umut Aydin"
+  },
+  "keywords": [
+    "cluster"
+  ],
+  "bugs": {
+    "url": "https://github.com/umuplus/nfork/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/umuplus/nfork.git"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/umuplus/nfork/raw/master/LICENSE"
+  },
+  "homepage": "https://github.com/umuplus/nfork",
+  "main": "./cluster.js",
+  "dependencies": {
+    "shortid": "~2.1.3"
+  },
+  "readmeFilename": "README.md"
+}
