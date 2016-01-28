@@ -1,12 +1,14 @@
 {
-  "version": "0.2.1",
+  "version": "0.5.0",
   "name": "nfork",
   "description": "extensible clustering module based on node.js' cluster",
   "author": {
     "name": "Umut Aydin"
   },
   "keywords": [
-    "cluster"
+    "cluster",
+    "fork",
+    "multiprocessing"
   ],
   "bugs": {
     "url": "https://github.com/umuplus/nfork/issues"
@@ -22,7 +24,7 @@
   "homepage": "https://github.com/umuplus/nfork",
   "main": "./cluster.js",
   "dependencies": {
-    "shortid": "~2.1.3"
+    "shortid": "^2.2.4"
   },
   "readmeFilename": "README.md"
 }

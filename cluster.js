@@ -73,6 +73,21 @@ Cluster.prototype.__findByFork = function (worker) {
 };
 
 /**
+ * This method sends a message to all forks
+ * @param {message} message message
+ * @returns String
+ * @memberof Cluster
+ * @method __findByFork
+ * @private true
+ */
+Cluster.prototype.__broadcast = function (message) {
+    var self = this;
+    Object.keys(this.forks).forEach(function (key) {
+        self.forks[key].worker.send(message);
+    });
+};
+
+/**
  * This method creates a new fork
  * @param {String} [fid] fork id
  * @throws retry-limit-reached
@@ -85,7 +100,7 @@ Cluster.prototype.__fork = function (fid) {
     if (typeof fid != 'string') {
         fid = shortid();
     }
-    if (Object.keys(this.forks).length <= this.options.fork) {
+    if (Object.keys(this.forks).length <= this.options.forkLimit) {
         if (!this.forks.hasOwnProperty(fid)) {
             this.forks[fid] = {
                 worker: $cluster.fork(),
@@ -102,6 +117,7 @@ Cluster.prototype.__fork = function (fid) {
                 if (this.options.retryLimit) {
                     this.forks[fid].retry += 1;
                 }
+                this.forks[fid].worker.removeAllListeners('message');
                 this.forks[fid].worker = $cluster.fork();
                 bind = true;
             } else {
@@ -113,11 +129,9 @@ Cluster.prototype.__fork = function (fid) {
         if (bind) {
             var self = this;
             this.forks[fid].worker.removeAllListeners('message');
-            if (this.options.debug) {
-                this.forks[fid].worker.on('message', function (request) {
-                    self.emit.apply(this, ['worker', request]);
-                });
-            }
+            this.forks[fid].worker.on('message', function (message) {
+                self.__broadcast(message);
+            });
         }
     }
 };
@@ -144,4 +158,16 @@ Cluster.prototype.__master = function () {
     }
 };
 
-module.exports = Cluster;
+exports.Cluster = Cluster;
+exports.is = function (_type) {
+    switch (_type) {
+        case 'master':
+            return $cluster.isMaster;
+            break;
+        case 'worker':
+            return $cluster.isWorker;
+            break;
+        default:
+            throw new Error('check with master or worker parameter');
+    }
+};
